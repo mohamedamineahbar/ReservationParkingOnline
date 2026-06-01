@@ -1,0 +1,53 @@
+
+.parking-page {
+    display: flex;
+    height: calc(100vh - 100px);
+    gap: 1rem;
+    padding: 1rem 2rem;
+}
+
+.map-section {
+    flex: 2;
+    height: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.list-section {
+    flex: 1;
+    height: 100%;
+    overflow-y: auto;
+    background-color: #ffffff;
+    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+}
+
+.list-section h2 {
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+    color: #333;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+}
+
+.lots-scroll {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.lot-wrapper {
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    border-radius: 10px;
+}
+
+.lot-wrapper.highlighted {
+    background-color: #f0f9ff;
+    transform: scale(1.02);
+    /*border: 2px solid #1e90ff; */
+}

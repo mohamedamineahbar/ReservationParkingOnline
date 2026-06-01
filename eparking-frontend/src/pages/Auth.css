@@ -1,0 +1,91 @@
+.auth-modern-container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(to right, #3b82f6, #60a5fa);
+    font-family: 'Inter', sans-serif;
+    padding: 2rem;
+}
+
+.auth-modern-card {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(12px);
+    padding: 2.5rem 2rem;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    max-width: 420px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.auth-modern-card h2 {
+    margin-bottom: 0.5rem;
+    text-align: center;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #1e3a8a;
+}
+
+.input-group {
+    position: relative;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 1rem 0.75rem 0.25rem 0.75rem;
+    border: none;
+    border-bottom: 2px solid #ccc;
+    background: transparent;
+    outline: none;
+    font-size: 1rem;
+    color: #111;
+    transition: border-color 0.3s ease;
+}
+
+.input-group input:focus {
+    border-color: #2563eb;
+}
+
+.input-group label {
+    position: absolute;
+    top: 1rem;
+    left: 0.75rem;
+    font-size: 1rem;
+    color: #666;
+    pointer-events: none;
+    transition: 0.2s ease all;
+}
+
+.input-group input:focus ~ label,
+.input-group input:not(:placeholder-shown) ~ label {
+    top: 0.25rem;
+    left: 0.75rem;
+    font-size: 0.75rem;
+    color: #2563eb;
+}
+
+.auth-modern-card button {
+    padding: 0.75rem;
+    border: none;
+    background: #2563eb;
+    color: white;
+    font-weight: 600;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.3s ease;
+}
+
+.auth-modern-card button:hover {
+    background: #1e40af;
+}
+
+.auth-error {
+    color: red;
+    font-size: 0.9rem;
+    text-align: center;
+    margin-top: -0.5rem;
+}
