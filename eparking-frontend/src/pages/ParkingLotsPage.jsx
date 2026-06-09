@@ -22,7 +22,7 @@ const userIcon = new L.Icon({
 // Fly map to selected parking lot
 const FlyToParkingLot = ({ lot }) => {
     const map = useMap();
-    
+
     // Store map instance globally for hover access
     React.useEffect(() => {
         window.leafletMap = map;
@@ -30,7 +30,7 @@ const FlyToParkingLot = ({ lot }) => {
             delete window.leafletMap;
         };
     }, [map]);
-    
+
     useEffect(() => {
         if (lot) {
             map.flyTo([lot.latitude, lot.longitude], 16, {
@@ -63,7 +63,6 @@ const ParkingLotsPage = () => {
     const [showAddModal, setShowAddModal] = useState(false);
     const [editLotData, setEditLotData] = useState(null);
     const [showMapView, setShowMapView] = useState(true); // Mobile view toggle
-
 
     const stripe = useStripe();
     const elements = useElements();
@@ -115,6 +114,18 @@ const ParkingLotsPage = () => {
         const a = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
         const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         return R * c;
+    };
+
+    // Build a Google Maps directions URL for a parking lot
+    // If the user's location is known, include it as the origin for turn-by-turn directions.
+    // Otherwise just open the destination so the user can set their own origin.
+    const getDirectionsUrl = (lot) => {
+        const dest = `${lot.latitude},${lot.longitude}`;
+        if (userLocation) {
+            const origin = `${userLocation[0]},${userLocation[1]}`;
+            return `https://www.google.com/maps/dir/${origin}/${dest}`;
+        }
+        return `https://www.google.com/maps/dir/?api=1&destination=${dest}`;
     };
 
     // Find nearest parking lot and highlight it
@@ -174,7 +185,7 @@ const ParkingLotsPage = () => {
         setShowDurationModal(false);
         try {
             const token = localStorage.getItem("token");
-            const response = await fetch('http://localhost:8080/api/reservations', {
+            const response = await fetch('/api/reservations', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -199,7 +210,7 @@ const ParkingLotsPage = () => {
     // Fetch reservation info
     const fetchReservation = async (id) => {
         const token = localStorage.getItem("token");
-        const response = await fetch(`http://localhost:8080/api/reservations/${id}`, {
+        const response = await fetch(`/api/reservations/${id}`, {
             headers: { 'Authorization': `Bearer ${token}` }
         });
         return await response.json();
@@ -244,7 +255,7 @@ const ParkingLotsPage = () => {
     const confirmPaymentOnBackend = async (reservationId) => {
         try {
             const token = localStorage.getItem("token");
-            const response = await fetch(`http://localhost:8080/api/reservations/${reservationId}/confirm-payment`, {
+            const response = await fetch(`/api/reservations/${reservationId}/confirm-payment`, {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -254,13 +265,14 @@ const ParkingLotsPage = () => {
             return false;
         }
     };
+
     const handleAddOrEditParkingLot = async (data) => {
         const token = localStorage.getItem("token");
 
         const method = data.id ? 'PUT' : 'POST';
         const url = data.id
-            ? `http://localhost:8080/api/parkinglots/edit/${data.id}`
-            : 'http://localhost:8080/api/parkinglots/add';
+            ? `/api/parkinglots/edit/${data.id}`
+            : '/api/parkinglots/add';
 
         try {
             const response = await fetch(url, {
@@ -281,7 +293,6 @@ const ParkingLotsPage = () => {
             alert(e.message);
         }
     };
-
 
     // If payment is ongoing, show payment form
     if (clientSecret) {
@@ -314,8 +325,8 @@ const ParkingLotsPage = () => {
                 <button
                     onClick={() => setShowMapView(true)}
                     className={`flex-1 py-3 px-4 text-center font-semibold transition ${
-                        showMapView 
-                            ? 'bg-blue-600 text-white' 
+                        showMapView
+                            ? 'bg-blue-600 text-white'
                             : 'bg-white text-gray-700 hover:bg-gray-50'
                     }`}
                 >
@@ -324,8 +335,8 @@ const ParkingLotsPage = () => {
                 <button
                     onClick={() => setShowMapView(false)}
                     className={`flex-1 py-3 px-4 text-center font-semibold transition ${
-                        !showMapView 
-                            ? 'bg-blue-600 text-white' 
+                        !showMapView
+                            ? 'bg-blue-600 text-white'
                             : 'bg-white text-gray-700 hover:bg-gray-50'
                     }`}
                 >
@@ -355,7 +366,17 @@ const ParkingLotsPage = () => {
                                 eventHandlers={{ click: () => setSelectedLotId(lot.id) }}
                                 opacity={nearestLot?.id === lot.id ? 1 : 0.7}
                             >
-                                <Popup>{lot.name}</Popup>
+                                <Popup>
+                                    <strong>{lot.name}</strong><br />
+                                    <a
+                                        href={getDirectionsUrl(lot)}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        style={{ color: '#2d6ef5', fontSize: '12px' }}
+                                    >
+                                        📍 Get Directions
+                                    </a>
+                                </Popup>
                             </Marker>
                         ))}
                         {selectedLot && <FlyToParkingLot lot={selectedLot} />}
@@ -381,6 +402,14 @@ const ParkingLotsPage = () => {
                             <div>
                                 Distance: <span className="text-green-700">{distanceToNearest} km</span>
                             </div>
+                            <a
+                                href={getDirectionsUrl(nearestLot)}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-blue-600 text-xs hover:underline"
+                            >
+                                🗺️ Open in Google Maps
+                            </a>
                         </div>
                     )}
                 </div>
@@ -432,6 +461,14 @@ const ParkingLotsPage = () => {
                             <p className="text-xs text-blue-600">
                                 {distanceToNearest} km away
                             </p>
+                            <a
+                                href={getDirectionsUrl(nearestLot)}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-xs text-blue-700 hover:underline"
+                            >
+                                🗺️ Directions
+                            </a>
                         </div>
                     )}
                     
@@ -474,8 +511,8 @@ const ParkingLotsPage = () => {
                                         }
                                     }}
                                     className={`transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98]
-                                        ${selectedLotId === lot.id 
-                                            ? 'bg-blue-100 border-2 border-blue-500 shadow-lg' 
+                                        ${selectedLotId === lot.id
+                                            ? 'bg-blue-100 border-2 border-blue-500 shadow-lg'
                                             : 'bg-white border-2 border-gray-100 shadow-md hover:shadow-lg'}
                                         ${nearestLot?.id === lot.id ? 'ring-2 ring-green-400' : ''}
                                         rounded-xl overflow-hidden`}
@@ -492,7 +529,7 @@ const ParkingLotsPage = () => {
                                             if (window.confirm(`Delete parking lot "${lot.name}"?`)) {
                                                 try {
                                                     const token = localStorage.getItem("token");
-                                                    const response = await fetch(`http://localhost:8080/api/parkinglots/delete/${lot.id}`, {
+                                                    const response = await fetch(`/api/parkinglots/delete/${lot.id}`, {
                                                         method: "DELETE",
                                                         headers: { Authorization: `Bearer ${token}` }
                                                     });
@@ -537,7 +574,6 @@ const ParkingLotsPage = () => {
                 onSubmit={handleAddOrEditParkingLot}
                 initialData={editLotData}
             />
-
 
         </div>
     );

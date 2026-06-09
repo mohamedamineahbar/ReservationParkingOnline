@@ -1,0 +1,54 @@
+services:
+
+  # ── PostgreSQL Database ──
+  db:
+    image: postgres:17.4-alpine
+    container_name: eparking-db
+    restart: always
+    environment:
+      POSTGRES_DB: parking
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d parking"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Spring Boot Backend ──
+  backend:
+    build:
+      context: ./eParking
+      dockerfile: Dockerfile
+    container_name: eparking-backend
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/parking
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      STRIPE_API_KEY: ${STRIPE_API_KEY:-sk_test_placeholder}
+      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET:-whsec_placeholder}
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # ── React Frontend (Nginx) ──
+  frontend:
+    build:
+      context: ./eparking-frontend
+      dockerfile: Dockerfile
+    container_name: eparking-frontend
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:

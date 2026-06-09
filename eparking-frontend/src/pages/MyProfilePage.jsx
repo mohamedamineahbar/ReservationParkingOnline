@@ -96,11 +96,11 @@ const MyProfile = () => {
         };
 
         const fetchActiveReservation = axios.get(
-            'http://localhost:8080/api/reservations/me',
+            '/api/reservations/me',
             config
         );
         const fetchHistory = axios.get(
-            'http://localhost:8080/api/reservations/history',
+            '/api/reservations/history',
             config
         );
 

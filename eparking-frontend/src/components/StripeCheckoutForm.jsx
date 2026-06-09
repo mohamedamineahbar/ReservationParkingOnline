@@ -22,7 +22,7 @@ const StripeCheckoutForm = ({ onPaymentSuccess }) => {
         if (error) {
             alert(error.message);
         } else if (paymentIntent && paymentIntent.status === "succeeded") {
-            await fetch(`http://localhost:8080/api/reservations/payments/confirm/${paymentIntent.id}`, {
+            await fetch(`/api/reservations/payments/confirm/${paymentIntent.id}`, {
                 method: "POST",
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("token")}`,

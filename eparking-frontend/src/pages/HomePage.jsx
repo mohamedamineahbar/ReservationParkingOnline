@@ -558,7 +558,7 @@ export default function HomePage() {
         <hr className="ep-divider" />
 
         {/* ── FEATURES ─────────────────────────── */}
-        <section style={{ background: '#fff' }}>
+        <section id="about-section" style={{ background: '#fff' }}>
           <div className="ep-section">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end',
               flexWrap: 'wrap', gap: '1rem', marginBottom: '2.5rem' }}>
@@ -652,7 +652,7 @@ export default function HomePage() {
         </section>
 
         {/* ── FOOTER ───────────────────────────── */}
-        <footer style={{ background: '#0f172a', padding: '3.5rem 1.5rem 2rem' }}>
+        <footer id="contact-section" style={{ background: '#0f172a', padding: '3.5rem 1.5rem 2rem' }}>
           <div style={{ maxWidth: 1140, margin: '0 auto' }}>
             <div className="ep-footer-grid" style={{ marginBottom: '2.5rem' }}>
               <div>
@@ -668,9 +668,12 @@ export default function HomePage() {
               <div>
                 <div style={{ fontSize: '.72rem', fontWeight: 700, letterSpacing: '.1em',
                   textTransform: 'uppercase', color: '#475569', marginBottom: '1rem' }}>Navigation</div>
-                {['Home', 'Parking Lots', 'My Profile', 'Check-In'].map(l => (
-                  <a key={l} href="#" className="ep-footer-link">{l}</a>
-                ))}
+                <a href="/" className="ep-footer-link">Home</a>
+                <a href="/parking-lots" className="ep-footer-link">Parking Lots</a>
+                <a href="#" className="ep-footer-link" onClick={(e) => { e.preventDefault(); document.getElementById('about-section')?.scrollIntoView({ behavior: 'smooth' }); }}>About Us</a>
+                <a href="#" className="ep-footer-link" onClick={(e) => { e.preventDefault(); document.getElementById('contact-section')?.scrollIntoView({ behavior: 'smooth' }); }}>Contact</a>
+                <a href="/login" className="ep-footer-link">Login</a>
+                <a href="/register" className="ep-footer-link">Create Account</a>
               </div>
 
               <div>
