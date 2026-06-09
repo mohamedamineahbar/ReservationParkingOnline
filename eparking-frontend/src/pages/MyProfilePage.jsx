@@ -96,11 +96,11 @@ const MyProfile = () => {
         };
 
         const fetchActiveReservation = axios.get(
-            '/api/reservations/me',
+            'http://localhost:8080/api/reservations/me',
             config
         );
         const fetchHistory = axios.get(
-            '/api/reservations/history',
+            'http://localhost:8080/api/reservations/history',
             config
         );
 
@@ -154,14 +154,9 @@ const MyProfile = () => {
         return () => clearTimeout(timeoutId);
     }, [activeReservation]);
 
-    const handleLogout = async () => {
-        try {
-            await axios.get('/api/user/logout');
-            logout();
-            navigate('/login');
-        } catch (err) {
-            alert('Logout failed.');
-        }
+    const handleLogout = () => {
+        logout();
+        navigate('/login');
     };
 
     const StatusChip = ({ label, success }) => (

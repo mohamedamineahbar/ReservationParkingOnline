@@ -185,7 +185,7 @@ const ParkingLotsPage = () => {
         setShowDurationModal(false);
         try {
             const token = localStorage.getItem("token");
-            const response = await fetch('/api/reservations', {
+            const response = await fetch('http://localhost:8080/api/reservations', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -210,7 +210,7 @@ const ParkingLotsPage = () => {
     // Fetch reservation info
     const fetchReservation = async (id) => {
         const token = localStorage.getItem("token");
-        const response = await fetch(`/api/reservations/${id}`, {
+        const response = await fetch(`http://localhost:8080/api/reservations/${id}`, {
             headers: { 'Authorization': `Bearer ${token}` }
         });
         return await response.json();
@@ -255,7 +255,7 @@ const ParkingLotsPage = () => {
     const confirmPaymentOnBackend = async (reservationId) => {
         try {
             const token = localStorage.getItem("token");
-            const response = await fetch(`/api/reservations/${reservationId}/confirm-payment`, {
+            const response = await fetch(`http://localhost:8080/api/reservations/${reservationId}/confirm-payment`, {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -271,8 +271,8 @@ const ParkingLotsPage = () => {
 
         const method = data.id ? 'PUT' : 'POST';
         const url = data.id
-            ? `/api/parkinglots/edit/${data.id}`
-            : '/api/parkinglots/add';
+            ? `http://localhost:8080/api/parkinglots/edit/${data.id}`
+            : 'http://localhost:8080/api/parkinglots/add';
 
         try {
             const response = await fetch(url, {
@@ -529,7 +529,7 @@ const ParkingLotsPage = () => {
                                             if (window.confirm(`Delete parking lot "${lot.name}"?`)) {
                                                 try {
                                                     const token = localStorage.getItem("token");
-                                                    const response = await fetch(`/api/parkinglots/delete/${lot.id}`, {
+                                                    const response = await fetch(`http://localhost:8080/api/parkinglots/delete/${lot.id}`, {
                                                         method: "DELETE",
                                                         headers: { Authorization: `Bearer ${token}` }
                                                     });

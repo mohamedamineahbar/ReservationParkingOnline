@@ -8,7 +8,7 @@ import CloseIcon from '@mui/icons-material/Close';
 
 const Header = () => {
     const { reservationInfo } = useReservation();
-    const { user } = useContext(AuthContext);
+    const { user, logout } = useContext(AuthContext);
     const [timeLeft, setTimeLeft] = useState('');
     const [mobileOpen, setMobileOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
@@ -22,6 +22,11 @@ const Header = () => {
     }, []);
 
     const navigate = useNavigate();
+
+    const handleLogout = () => {
+        logout();
+        navigate('/');
+    };
 
     /* Nav links: public links always visible, auth-aware ones conditional */
     const publicLinks = [
@@ -297,6 +302,17 @@ const Header = () => {
                             Check-In
                         </Button>
 
+                        {/* Logged-in user: show logout — desktop only */}
+                        {user && (
+                            <Button
+                                onClick={handleLogout}
+                                className="hdr-login-btn"
+                                sx={{ display: { xs: 'none', md: 'inline-flex' } }}
+                            >
+                                Logout
+                            </Button>
+                        )}
+
                         {/* Auth buttons — desktop only, shown when NOT logged in */}
                         {!user && (
                             <>
@@ -443,6 +459,24 @@ const Header = () => {
                     >
                         🚗 Check-In Now
                     </Button>
+
+                    {user && (
+                        <Button
+                            onClick={() => { handleDrawerToggle(); handleLogout(); }}
+                            fullWidth
+                            variant="outlined"
+                            sx={{
+                                fontFamily: 'Plus Jakarta Sans, sans-serif',
+                                fontWeight: 600, fontSize: '0.9rem',
+                                textTransform: 'none', borderRadius: '10px',
+                                py: 1.1,
+                                borderColor: '#fca5a5', color: '#dc2626',
+                                '&:hover': { bgcolor: '#fee2e2', borderColor: '#dc2626' },
+                            }}
+                        >
+                            Logout
+                        </Button>
+                    )}
 
                     {!user && (
                         <>

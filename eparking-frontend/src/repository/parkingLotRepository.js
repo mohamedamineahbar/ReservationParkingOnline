@@ -35,7 +35,7 @@ export const reserveNowPayLater = async (parkingLotId) => {
         type: "NOW_PAY_LATER",
         durationInMinutes: 30,
     };
-    const res = await axios.post('/api/reservations', dto, {
+    const res = await axios.post('http://localhost:8080/api/reservations', dto, {
         headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
